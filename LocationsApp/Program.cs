@@ -8,20 +8,21 @@ namespace LocationsApp
 {
     class Program
     {
-        private static readonly HttpClient client = new HttpClient();
-        private static string DataUrl = "https://raw.githubusercontent.com/chyld/datasets/main/markers.json";
+        private static readonly HttpClient Client = new HttpClient();
+        private const string DataUrl = "https://raw.githubusercontent.com/chyld/datasets/main/markers.json";
+
         static async Task Main(string[] args)
         {
-            await ProcessRepositories();
+            await ProcessLocations();
         }
         
-        private static async Task ProcessRepositories()
+        private static async Task ProcessLocations()
         {
-            var streamTask = client.GetStreamAsync(DataUrl);
-            var repositories = await JsonSerializer.DeserializeAsync<List<LocationRepository>>(await streamTask);
+            var streamTask = Client.GetStreamAsync(DataUrl);
+            var locationRecords = await JsonSerializer.DeserializeAsync<List<LocationRecord>>(await streamTask);
             
-            foreach (var repo in repositories)
-                Console.WriteLine(repo.Location[0]);
+            foreach (var location in locationRecords)
+                Console.WriteLine($"{location.Name} - {location.Position[0]}, {location.Position[1]}");
         }
     }
 }
